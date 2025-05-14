@@ -87,7 +87,7 @@ missing_players = original_set - found_set
 
 print(f"\nNumber of players NOT found on the main page: {len(missing_players)}")
 for missing in sorted(missing_players):
-    print("⛔", missing.title())
+    print(missing.title())
 
 for player in missing_players:
     print(f"Searching for: {player}")
