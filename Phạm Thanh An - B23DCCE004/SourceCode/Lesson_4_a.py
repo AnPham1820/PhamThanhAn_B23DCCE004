@@ -29,13 +29,13 @@ try:
     full_list_link = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.tab-content div.btm-link a')))
     href = full_list_link.get_attribute("href")
     if not href:
-        raise Exception("⚠️ Failed to retrieve href from <a> tag")
+        raise Exception("Failed to retrieve href from <a> tag")
 
     found_players = set()
 
     for i in range(1, 23):
         paged_url = href if i == 1 else f"{href}/{i}"
-        print(f"\n🔎 Processing page: {paged_url}")
+        print(f"\nProcessing page: {paged_url}")
 
         retry_count = 0
         while retry_count < 3:
@@ -65,32 +65,32 @@ try:
                         invalid_count += 1
 
                 if invalid_count:
-                    print(f"⚠️ Skipped {invalid_count} invalid rows.")
+                    print(f"Skipped {invalid_count} invalid rows.")
                 break 
 
             except Exception as e:
                 retry_count += 1
-                print(f"🔁 Error loading page (attempt {retry_count}) — retrying...")
+                print(f"Error loading page (attempt {retry_count}) — retrying...")
 
         if retry_count == 3:
-            print(f"❌ Skipped page {i} after 3 failed attempts.")
+            print(f"Skipped page {i} after 3 failed attempts.")
 
 except Exception as e:
-    print("❌ Error accessing main page or retrieving link:", e)
+    print("Error accessing main page or retrieving link:", e)
 
-print(f"\n✅ Total matched players found: {len(found_players)}")
+print(f"\nTotal matched players found: {len(found_players)}")
 
 original_set = set(players_with_900_minutes)
 found_set = set(name.lower() for name in found_players)
 
 missing_players = original_set - found_set
 
-print(f"\n❌ Number of players NOT found on the main page: {len(missing_players)}")
+print(f"\nNumber of players NOT found on the main page: {len(missing_players)}")
 for missing in sorted(missing_players):
     print("⛔", missing.title())
 
 for player in missing_players:
-    print(f"🔎 Searching for: {player}")
+    print(f"Searching for: {player}")
     try:
         driver.get("https://www.footballtransfers.com")
         time.sleep(3)
@@ -118,12 +118,12 @@ for player in missing_players:
         results.append({"Name": player_name, "ETV": etv_value})
 
     except Exception as e:
-        print(f"❌ Could not retrieve data for {player}: {e}")
+        print(f"Could not retrieve data for {player}: {e}")
         results.append({"Name": player, "ETV": "Not found"})
 
 driver.quit()
 
-print("\n📊 Full list of players and their Estimated Transfer Value (ETV):")
+print("\nFull list of players and their Estimated Transfer Value (ETV):")
 for r in results:
     print(f"{r['Name']}: {r['ETV']}")
 
@@ -142,4 +142,4 @@ final_df = pd.merge(
 ).drop(columns=["Name_Key"])
 
 final_df.to_csv("results_bai_4.csv", index=True, encoding="utf-8-sig")
-print("\n✅ Results saved to 'results_bai_4.csv'")
+print("\nResults saved to 'results_bai_4.csv'")
